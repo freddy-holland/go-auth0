@@ -2,14 +2,26 @@
 <!DOCTYPE html>
 <html>
 
-<head></head>
+<head>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
 
 <body>
-	<div class="profile">
-		<img class="avatar" src="{{ .picture }}" />
-		<h2>Welcome {{.nickname}}</h2>
-	</div>
+	{{ template "profile" . }}
 </body>
 
 </html>
+{{ end }}
+
+{{ define "profile" }}
+<div class="profile-widget w-1/4 flex flex-col items-center justify-center">
+	<div class="avatar">
+		<div class="w-24 rounded-full">
+			<img src="{{.picture}}" />
+		</div>
+	</div>
+	<p class="text-base font-bold">{{.nickname}}</p>
+	<a href="/logout" class="btn btn-sm btn-outline btn-primary w-1/2">Logout</a>
+</div>
 {{ end }}

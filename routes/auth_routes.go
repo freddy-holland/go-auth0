@@ -6,6 +6,8 @@ import (
 	"encoding/gob"
 	"fmt"
 	"net/http"
+	"net/url"
+	"os"
 
 	"fholl.net/auth0/authenticator"
 	"github.com/labstack/echo/v4"
@@ -90,5 +92,25 @@ func callbackHandler(c echo.Context) error {
 }
 
 func logoutHandler(c echo.Context) error {
-	return c.String(http.StatusOK, "Logout works")
+	logoutUrl, err := url.Parse("https://" + os.Getenv("AUTH0_DOMAIN") + "/v2/logout")
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	scheme := "http"
+	if c.Request().TLS != nil {
+		scheme = "https"
+	}
+
+	returnTo, err := url.Parse(scheme + "://" + c.Request().Host)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	params := url.Values{}
+	params.Add("returnTo", returnTo.String())
+	params.Add("client_id", os.Getenv("AUTH0_CLIENT_ID"))
+	logoutUrl.RawQuery = params.Encode()
+
+	return c.Redirect(http.StatusTemporaryRedirect, logoutUrl.String())
 }
