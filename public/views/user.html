@@ -5,6 +5,8 @@
 <head>
 	<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
 	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 </head>
 
 <body>
@@ -22,6 +24,13 @@
 		</div>
 	</div>
 	<p class="text-base font-bold">{{.nickname}}</p>
-	<a href="/logout" class="btn btn-sm btn-outline btn-primary w-1/2">Logout</a>
+	<a class="btn-logout btn btn-primary w-full" onclick="handleLogoutClick(event)" href="/logout">Logout</a>
+	<script>
+		function handleLogoutClick(event) {
+			event.preventDefault();
+			Cookies.remove("auth-session");
+			window.location.href = event.target.href;
+		}
+	</script>
 </div>
 {{ end }}
